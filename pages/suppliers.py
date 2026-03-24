@@ -55,7 +55,7 @@ def _list_suppliers():
         st.info("لا يوجد موردون مسجلون بعد")
         return
 
-    d = df[df["active"].astype(str)=="True"].copy()
+    d = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"].copy()
     if search:
         d = d[
             d["name"].str.contains(search, case=False, na=False) |
@@ -231,7 +231,7 @@ def _contacts():
     c1,c2 = st.columns([1,2])
     with c1:
         st.markdown("#### ➕ إضافة جهة اتصال")
-        active_sups = suppliers_df[suppliers_df["active"].astype(str)=="True"] if not suppliers_df.empty else pd.DataFrame()
+        active_sups = suppliers_df[suppliers_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not suppliers_df.empty else pd.DataFrame()
         sup_opts = dict(zip(active_sups["name"], active_sups["id"])) if not active_sups.empty else {}
 
         with st.form("add_contact", clear_on_submit=True):
@@ -264,7 +264,7 @@ def _contacts():
         if contacts_df.empty:
             st.info("لا توجد جهات اتصال")
         else:
-            active_c = contacts_df[contacts_df["active"].astype(str)=="True"]
+            active_c = contacts_df[contacts_df["active"].astype(str).str.strip().str.upper()=="TRUE"]
             search_c = st.text_input("🔍 بحث")
             if search_c:
                 active_c = active_c[
@@ -288,7 +288,7 @@ def _stats():
     if df.empty:
         st.info("لا توجد بيانات")
         return
-    active = df[df["active"].astype(str)=="True"]
+    active = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     c1,c2 = st.columns(2)
     with c1:
         st.markdown("**التوزيع حسب النوع**")

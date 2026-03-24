@@ -38,8 +38,8 @@ def _create(user):
     st.markdown("### ➕ طلب تحويل مواد جديد")
     products_df = read_df("products")
     offices_df  = read_df("offices")
-    active_prods= products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
-    active_off  = offices_df[offices_df["active"].astype(str)=="True"]   if not offices_df.empty  else pd.DataFrame()
+    active_prods= products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
+    active_off  = offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"]   if not offices_df.empty  else pd.DataFrame()
 
     if active_prods.empty:
         st.warning("لا توجد منتجات مسجلة."); return
@@ -334,7 +334,7 @@ def _all(user):
     if df.empty: st.info("لا توجد سندات بعد"); return
 
     offices_df = read_df("offices")
-    office_names = ["الكل"] + (list(offices_df[offices_df["active"].astype(str)=="True"]["name"]) if not offices_df.empty else [])
+    office_names = ["الكل"] + (list(offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"]["name"]) if not offices_df.empty else [])
 
     fc1,fc2,fc3,fc4 = st.columns(4)
     with fc1:

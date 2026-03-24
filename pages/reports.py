@@ -18,7 +18,7 @@ def _stock_report():
     stock_df=get_stock_df()
     products_df=read_df("products")
     if stock_df.empty or products_df.empty: st.info("لا بيانات"); return
-    active=products_df[products_df["active"].astype(str)=="True"]
+    active=products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     merged=active.merge(stock_df[["product_id","quantity","last_updated"]],
                         left_on="id",right_on="product_id",how="left")
     merged["quantity"]=pd.to_numeric(merged.get("quantity",0),errors="coerce").fillna(0)
@@ -116,7 +116,7 @@ def _suppliers_report():
     df=read_df("suppliers")
     inv=read_df("invoices")
     if df.empty: st.info("لا بيانات"); return
-    active=df[df["active"].astype(str)=="True"]
+    active=df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     c1,c2=st.columns(2)
     with c1:
         st.markdown("**التوزيع بالولاية**")
@@ -140,7 +140,7 @@ def _kpi_dashboard():
     transfers_df=read_df("transfers")
     movements_df=read_df("stock_movements")
 
-    active=products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
+    active=products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
 
     # KPI cards
     kpis=[

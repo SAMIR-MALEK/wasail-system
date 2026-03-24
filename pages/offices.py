@@ -40,7 +40,7 @@ def _list_offices():
         st.info("لا توجد مكاتب مسجلة بعد")
         return
 
-    d = df[df["active"].astype(str)=="True"].copy()
+    d = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"].copy()
     if search:
         d = d[
             d["name"].str.contains(search, case=False, na=False) |
@@ -51,7 +51,7 @@ def _list_offices():
 
     # إضافة المسؤول الحالي
     if not managers_df.empty:
-        current = managers_df[managers_df["is_current"].astype(str)=="True"]
+        current = managers_df[managers_df["is_current"].astype(str).str.strip().str.upper()=="TRUE"]
         mgr_map = dict(zip(current["office_id"], current["manager_name"]))
         d["المسؤول الحالي"] = d["id"].map(lambda x: mgr_map.get(str(x),"—"))
     else:
@@ -105,7 +105,7 @@ def _list_offices():
                 if not managers_df.empty:
                     curr_mgr = managers_df[
                         (managers_df["office_id"].astype(str)==str(sel_id)) &
-                        (managers_df["is_current"].astype(str)=="True")
+                        (managers_df["is_current"].astype(str).str.strip().str.upper()=="TRUE")
                     ]
                     if not curr_mgr.empty:
                         m = curr_mgr.iloc[0].to_dict()
@@ -196,7 +196,7 @@ def _list_managers():
 
     # فقط الحاليون
     show_all = st.checkbox("عرض الجميع (بما فيهم السابقون)")
-    d = managers_df.copy() if show_all else managers_df[managers_df["is_current"].astype(str)=="True"].copy()
+    d = managers_df.copy() if show_all else managers_df[managers_df["is_current"].astype(str).str.strip().str.upper()=="TRUE"].copy()
 
     search_m = st.text_input("🔍 بحث باسم المسؤول أو المكتب")
     if search_m:
@@ -206,7 +206,7 @@ def _list_managers():
         ]
 
     # بطاقات للمسؤولين الحاليين
-    current = d[d["is_current"].astype(str)=="True"] if not d.empty else pd.DataFrame()
+    current = d[d["is_current"].astype(str).str.strip().str.upper()=="TRUE"] if not d.empty else pd.DataFrame()
     if not current.empty:
         st.markdown("#### المسؤولون الحاليون")
         cols = st.columns(min(3, len(current)))
@@ -249,7 +249,7 @@ def _assign_manager():
         st.warning("أضف مكاتب أولاً")
         return
 
-    active_offices = offices_df[offices_df["active"].astype(str)=="True"]
+    active_offices = offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     office_opts = dict(zip(
         active_offices.get("code","")+"  —  "+active_offices["name"],
         active_offices["id"]
@@ -284,7 +284,7 @@ def _assign_manager():
             if not managers_df.empty:
                 current = managers_df[
                     (managers_df["office_id"].astype(str)==str(office_id)) &
-                    (managers_df["is_current"].astype(str)=="True")
+                    (managers_df["is_current"].astype(str).str.strip().str.upper()=="TRUE")
                 ]
                 for _, old in current.iterrows():
                     update_row("office_managers", old["id"], {
@@ -324,10 +324,10 @@ def _map_view():
         st.info("أضف مكاتب لعرض المخطط")
         return
 
-    active = offices_df[offices_df["active"].astype(str)=="True"]
+    active = offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     mgr_map = {}
     if not managers_df.empty:
-        curr = managers_df[managers_df["is_current"].astype(str)=="True"]
+        curr = managers_df[managers_df["is_current"].astype(str).str.strip().str.upper()=="TRUE"]
         mgr_map = dict(zip(curr["office_id"].astype(str), curr["manager_name"]))
 
     # تجميع حسب الطابق

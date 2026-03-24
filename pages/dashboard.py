@@ -37,9 +37,9 @@ def show_dashboard():
     suppliers_df = read_df("suppliers")
     po_df        = read_df("purchase_orders")
 
-    active_prods = products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
-    active_offices = offices_df[offices_df["active"].astype(str)=="True"] if not offices_df.empty else pd.DataFrame()
-    active_sups    = suppliers_df[suppliers_df["active"].astype(str)=="True"] if not suppliers_df.empty else pd.DataFrame()
+    active_prods = products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
+    active_offices = offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not offices_df.empty else pd.DataFrame()
+    active_sups    = suppliers_df[suppliers_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not suppliers_df.empty else pd.DataFrame()
 
     # ── حسابات ───────────────────────────────────────────
     total_products = len(active_prods)

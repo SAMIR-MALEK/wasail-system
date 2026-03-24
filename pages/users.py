@@ -19,7 +19,7 @@ def _list():
     if df.empty: st.info("لا يوجد مستخدمون"); return
     offices_df=read_df("offices")
     show_inactive=st.checkbox("عرض الحسابات المعطلة")
-    d=df.copy() if show_inactive else df[df["active"].astype(str)=="True"]
+    d=df.copy() if show_inactive else df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     d["الدور"]=d["role"].map(lambda r:ROLES.get(r,{}).get("icon","")+" "+ROLES.get(r,{}).get("label",r))
     show=["username","full_name","title","الدور","department","phone","email","last_login","created_at"]
     avail=[c for c in show if c in d.columns]
@@ -32,7 +32,7 @@ def _list():
 def _add():
     st.markdown("### ➕ إضافة مستخدم جديد")
     offices_df=read_df("offices")
-    office_names=list(offices_df[offices_df["active"].astype(str)=="True"]["name"]) if not offices_df.empty else []
+    office_names=list(offices_df[offices_df["active"].astype(str).str.strip().str.upper()=="TRUE"]["name"]) if not offices_df.empty else []
     with st.form("add_user",clear_on_submit=True):
         uc1,uc2=st.columns(2)
         with uc1:
@@ -76,7 +76,7 @@ def _change_pw():
     st.markdown("### 🔒 تغيير كلمة مرور")
     df=read_df("users")
     if df.empty: return
-    active=df[df["active"].astype(str)=="True"]
+    active=df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     sel=st.selectbox("المستخدم",list(active["full_name"]+" ("+active["username"]+")"))
     username=sel.split("(")[-1].rstrip(")")
     new_pw=st.text_input("كلمة المرور الجديدة",type="password")

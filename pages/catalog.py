@@ -37,8 +37,8 @@ def _products_tab(user):
     units_df     = read_df("units")
     stock_df     = get_stock_df()
 
-    active_cats  = categories_df[categories_df["active"].astype(str)=="True"] if not categories_df.empty else pd.DataFrame()
-    active_units = units_df[units_df["active"].astype(str)=="True"] if not units_df.empty else pd.DataFrame()
+    active_cats  = categories_df[categories_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not categories_df.empty else pd.DataFrame()
+    active_units = units_df[units_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not units_df.empty else pd.DataFrame()
 
     cat_names  = list(active_cats["name"])  if not active_cats.empty  else []
     unit_names = list(active_units["name"]) if not active_units.empty else []
@@ -115,7 +115,7 @@ def _products_tab(user):
     if not products_df.empty:
         df = products_df.copy()
         if not show_inactive:
-            df = df[df["active"].astype(str)=="True"]
+            df = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
         if search:
             df = df[
                 df["name"].str.contains(search, case=False, na=False) |
@@ -230,11 +230,11 @@ def _categories_tab(user):
         if df.empty:
             st.info("لا توجد فئات")
         else:
-            active = df[df["active"].astype(str)=="True"]
+            active = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
             # إضافة عدد المنتجات لكل فئة
             prods = read_df("products")
             if not prods.empty:
-                counts = prods[prods["active"].astype(str)=="True"]["category_name"].value_counts().to_dict()
+                counts = prods[prods["active"].astype(str).str.strip().str.upper()=="TRUE"]["category_name"].value_counts().to_dict()
                 active = active.copy()
                 active["عدد المنتجات"] = active["name"].map(lambda n: counts.get(n,0))
 
@@ -274,7 +274,7 @@ def _units_tab(user):
         st.markdown("#### 📋 الوحدات الحالية")
         df = read_df("units")
         if not df.empty:
-            active = df[df["active"].astype(str)=="True"]
+            active = df[df["active"].astype(str).str.strip().str.upper()=="TRUE"]
             st.dataframe(
                 active[["name","name_fr","symbol"]].rename(columns={
                     "name":"الاسم","name_fr":"بالفرنسية","symbol":"الرمز"
@@ -295,7 +295,7 @@ def _stock_tab():
         st.info("لا توجد بيانات مخزون بعد")
         return
 
-    active = products_df[products_df["active"].astype(str)=="True"]
+    active = products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"]
     merged = active.merge(
         stock_df[["product_id","quantity","available_qty","last_in_date","last_out_date","last_updated"]],
         left_on="id", right_on="product_id", how="left"

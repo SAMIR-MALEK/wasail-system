@@ -13,12 +13,12 @@ def _new():
     st.markdown("### ➕ بدء جلسة جرد")
     products_df = read_df("products")
     stock_df    = get_stock_df()
-    active      = products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
+    active      = products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
     if active.empty: st.warning("لا منتجات"); return
 
     from config import DEFAULT_CATEGORIES
     cats_df = read_df("categories")
-    cat_list = list(cats_df[cats_df["active"].astype(str)=="True"]["name"]) if not cats_df.empty else DEFAULT_CATEGORIES
+    cat_list = list(cats_df[cats_df["active"].astype(str).str.strip().str.upper()=="TRUE"]["name"]) if not cats_df.empty else DEFAULT_CATEGORIES
     cat = st.selectbox("تصفية بالفئة", ["الكل"]+cat_list)
     scope = st.selectbox("نطاق الجرد", ["جرد شامل","جرد فئة","جرد عينة"])
     prods = active if cat=="الكل" else active[active["category_name"]==cat]

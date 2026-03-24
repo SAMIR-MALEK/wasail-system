@@ -35,8 +35,8 @@ def _receive_goods(user):
     suppliers_df = read_df("suppliers")
     po_df        = read_df("purchase_orders")
 
-    active_prods = products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
-    active_sups  = suppliers_df[suppliers_df["active"].astype(str)=="True"] if not suppliers_df.empty else pd.DataFrame()
+    active_prods = products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
+    active_sups  = suppliers_df[suppliers_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not suppliers_df.empty else pd.DataFrame()
 
     if active_prods.empty:
         st.warning("⚠️ لا توجد منتجات مسجلة. أضف منتجات أولاً من كتالوج المنتجات.")
@@ -281,8 +281,8 @@ def _new_purchase_order(user):
     st.markdown("### ➕ إنشاء طلب شراء جديد")
     products_df  = read_df("products")
     suppliers_df = read_df("suppliers")
-    active_prods = products_df[products_df["active"].astype(str)=="True"] if not products_df.empty else pd.DataFrame()
-    active_sups  = suppliers_df[suppliers_df["active"].astype(str)=="True"] if not suppliers_df.empty else pd.DataFrame()
+    active_prods = products_df[products_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not products_df.empty else pd.DataFrame()
+    active_sups  = suppliers_df[suppliers_df["active"].astype(str).str.strip().str.upper()=="TRUE"] if not suppliers_df.empty else pd.DataFrame()
 
     if active_prods.empty:
         st.warning("أضف منتجات أولاً")
