@@ -157,13 +157,25 @@ def hash_pw(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
 def authenticate(username: str, password: str):
+    import streamlit as st
     df = read_df("users")
-    if df.empty: return None
-    h  = hash_pw(password)
-    r  = df[
+    if df.empty:
+        st.error("DEBUG: الجدول فارغ")
+        return None
+    h = hash_pw(password)
+    # debug
+    st.warning(f"DEBUG — صفوف: {len(df)}")
+    st.warning(f"DEBUG — أعمدة: {list(df.columns)}")
+    if not df.empty:
+        row = df.iloc[0]
+        st.warning(f"DEBUG — username في Sheet: [{row.get('username','')}]")
+        st.warning(f"DEBUG — hash في Sheet: [{str(row.get('password_hash',''))[:20]}...]")
+        st.warning(f"DEBUG — hash المحسوب:   [{h[:20]}...]")
+        st.warning(f"DEBUG — active: [{row.get('active','')}]")
+    r = df[
         (df["username"] == username) &
         (df["password_hash"] == h) &
-        (df["active"].astype(str) == "True")
+        (df["active"].astype(str).str.strip().str.upper() == "TRUE")
     ]
     if r.empty: return None
     user = r.iloc[0].to_dict()
