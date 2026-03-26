@@ -19,8 +19,7 @@ st.markdown("""
 /* شريط جانبي */
 [data-testid="stSidebar"]{
     background:linear-gradient(180deg,#0d0d1a 0%,#111827 60%,#1a1a2e 100%)!important;
-    border-right:3px solid #e94560;
-    border-left:none!important;
+    border:none!important;
 }
 [data-testid="stSidebar"] *{color:#c8c8d0!important;}
 
